@@ -49,7 +49,7 @@ inversionRecovery(T1);
 %% Question 1
 % If we apply a 90-degree pulse at the time when exactly half the signal has 
 % recovered, what do you expect the transverse magnetization to be?
-% 
+% 0
 % (Extra credit: is this the same as applying a pulse at T1? Why or why not?)
 % 
 % Comparing the two panels, you can see that the amplitude of the net transverse 
@@ -83,7 +83,7 @@ inversionRecovery(T1);
 % in time that is well separated from the inverting pulse.
 %%
 % The time until the inverse pulse determines when the echo will occur
-TE = 16;        
+TE = 20;        
 clf; spinEcho(TE);
 title('Transverse plane'); 
 %% MR Image Formation
@@ -134,12 +134,16 @@ hold off
 %% Question 2
 % If you were to plot the Fourier Transform for each of the three subplots, 
 % how do you expect they would differ?
+
+% difference in the amplitude but not the peak frequency (?)
+% the shape of the peak (wide vs. narrow)
 %%
 clf; 
 for ii=1:3
     subplot(3,1,ii); set(gca,'ylim',[-1,1]);
     signal = rfSignal(tConstant(ii),Mo,t,larmorFreq(1));
-    plot(powerSpecDens(signal));
+    plot(powerSpecDens(signal)); %powerSpecDens returns normalized frequency and power density
+    % try psd(signal) instead
 end
 xlabel('frequency'); ylabel('power')
 hold off
@@ -218,7 +222,8 @@ title('Fourier Space');
 %% Question 3
 % When computing the RF signal in the last example, which variable(s) represented 
 % the magnetic field gradient?
-% 
+% the peak frequency
+
 % From answering Question 2, and understanding this simple case, you should 
 % understand how the gradient associates different RF signal frequencies with 
 % different spatial locations.
@@ -322,8 +327,8 @@ title('Slice selection')
 % and a sinc function.  (Type help sinc to read about this important function). 
 % Each sinc function has its own frequency, too. 
 %%
-sincFreq  = 20;      % Try 10, 20 and 40.
-pulseFreq = 50;      % Try 25, 50 and 75.
+sincFreq  = 10;      % Try 10, 20 and 40.
+pulseFreq = 25;      % Try 25, 50 and 75.
 
 rfPulse(pulseStart:pulseStop) = sin(2*pi*pulseFreq*pulseT);
 rfPulse(pulseStart:pulseStop) = ...
@@ -340,6 +345,11 @@ title('Slice selection')
 %% Question 4
 % Run the above code a few times, varying the pulse and sinc frequency  values.  
 % What effect does each parameter have on slice position and slice width?
+
+% sincFreq controls the slice width (larger sincFreq --> larger slice
+% width)
+% pulseFreq controls the slice position (higher pulseFreq --> further
+% position
 %% Frequency encoding and phase encoding together
 % The Hornak MRI book, <http://www.cis.rit.edu/htbooks/mri/ http://www.cis.rit.edu/htbooks/mri/>, 
 % has a very good discussion of imaging, including frequency and phase encoding. 
@@ -389,7 +399,7 @@ plot(t,s);xlabel('Time'); ylabel('RF'); title('Total RF'); grid on
 set(gca,'ylim',[-3 3]);
 subplot(1,2,2)
 [p,f] = powerSpecDens(s); 
-plot(f,p,'o-'); grid on; set(gca,'ylim',[0,10]);
+plot(f,p,'.-'); grid on; set(gca,'ylim',[0,10]);
 xlabel('Normalized frequency'); ylabel('Normalized power'); 
 title('Total RF Signal')
 %% 
@@ -423,9 +433,9 @@ plot(t,s); xlabel('Time'); ylabel('RF'); title('Total RF'); grid on
 set(gca,'ylim',[-2 2]);
 subplot(1,2,2)
 [p,f] = powerSpecDens(s); 
-plot(f,p,'o-'); grid on; set(gca,'ylim',[0,10]);
+plot(f,p,'.-'); grid on; set(gca,'ylim',[0,10]);
 xlabel('Normalized frequency'); ylabel('Normalized power'); 
-title('Total RF Signal')
+title('Total R.F Signal')
 %% 
 % These two measurements at the main frequencies provide an estimate of 
 % the sum and the difference of the time constants in the upper and lower beakers. 

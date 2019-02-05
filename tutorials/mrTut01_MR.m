@@ -53,10 +53,11 @@ v = g*B0      % The resonant (Larmor) frequency of hydrogen
 % What are the units of the Larmor frequency, v, for hydrogen as expressed  
 % above? The gyromagnetic constant of sodium is 11.27e+6 Hz/Tesla.  Compute the 
 % Larmor frequency of sodium in a 3T magnet.
+v_sodium = 11.27*10^6*3
 
 % Ordinarily, the Larmor frequency (resonant frequency) is expressed 
 % in MegaHertz (millions of hertz) 
-fprintf('Hydrogen Larmor frequency\n %0.4f MHz at %.1f Tesla',...
+fprintf('Hydrogen Larmor frequency\n %0.4f MHz at %.1f Tesla \n',...
     v/(10^6),B0);
 %% Spin Energy
 % The energy in a precessing spin is proportional to its resonant frequency, 
@@ -69,6 +70,7 @@ h = 6.626e-34; % Planck's constant (J s)
 E = h*v;
 %% *Question 2*
 % What are the units of E?
+% Hz*J
 % 
 % At steady state, say when the subject enters the magnet and prior to any 
 % measurements, the dipoles align parallel or anti-parallel to the magnetic field. 
@@ -91,7 +93,7 @@ ratioHigh2Low = exp(-dE/(k*T));  % Boltzmann's formula, Hornak, Chapter 3; Huett
 
 % Under typical conditions the number of dipoles in the low and high energy
 % states are very similar.
-fprintf('Ratio of high/low energy state dipoles:\n  %e',ratioHigh2Low)
+fprintf('Ratio of high/low energy state dipoles:  %e \n',ratioHigh2Low)
 %% 
 % At low temperatures (near absolute zero), very few of the dipoles enter 
 % the high (anti-parallel) energy state.  No, this is not important for us. But 
@@ -106,8 +108,16 @@ xlabel('Temperature (K)'); ylabel('Ratio of high/low energy state dipoles')
 set(gca,'ylim',[-0 1.1]); grid on
 %% Question 3
 % * Where is human body temperature on the graph?  
+% 20 celsius = 20+273.15 = 293.15 K
+log10(293.15)
+
+
 % * Given human body temperature, what is the ratio of high/low energy?
+% almost 1
+exp( -dE / (k*293.15))
+
 % * Would it matter if we kept the room cooler
+% no
 %% T1 tissue contrast
 % The tendency of dipoles to align (either parallel or anti-parallel) with the 
 % B0 magnetic field imposes an opportunity to probe tissue properties using magnetic 
@@ -218,7 +228,7 @@ Mo = 1;             % Set the net magnetization in the steady state to 1 and ign
 
 % This is the exponential rate of recovery of the T1 magnetization, after
 % it has been set to zero by flipping the net magnetization 90 degrees.
-MzG = Mo *( 1 - exp(-t ./ T1) );
+MzG = Mo *( 1 - exp(-t ./ T1) ); % greay matters
 
 % Plotted is a graph we have the magnetization of gray matter as:
 plot(t,MzG);
@@ -232,7 +242,7 @@ xlabel('Time (s)'); ylabel('Transverse magnetization (T1)'); grid on
 % see that white matter recovers slightly faster (has a smaller T1):
 %%
 T1 = 0.64;
-MzW = Mo *( 1 - exp(-t ./ T1) );
+MzW = Mo *( 1 - exp(-t ./ T1) ); % white matters
 plot(t,MzG,'b-',t,MzW,'r--');
 xlabel('Time (s)'); ylabel('Transverse magnetization (T1)'); grid on
 legend('Gray','White')
@@ -250,9 +260,16 @@ xlabel('Time (s)'); ylabel('Magnetization difference'); grid on
 % If you are seeking to make a measurement that optimizes the signal to noise 
 % ratio between these two materials, at what time would you measure the recovery 
 % of the T1 signal? 
+t([(MzW - MzG) == max(MzW - MzG)])
+
 %% Question 5
-% Look up the T1 value of cerebro-spinal fluid (CSF).  Plot the T1 recovery 
+% Look up the T1 value of cerebro-spinal fluid: (CSF).  Plot the T1 recovery 
 % of CSF.  At what time you would measure to maximize the white/CSF contrast.
+T1_csf = 4;
+Mz_csf = Mo *( 1 - exp(-t ./ T1_csf) );
+%plot(t,Mz_csf,'b-',t,MzW,'r--');
+plot(t,abs(MzW - MzG));
+
 % 
 % We can visualize this difference as follows. Suppose that we have two beakers, 
 % adjacent to one another, containing materials with different T1 values.  Suppose 
@@ -305,8 +322,11 @@ end
 %% Question 6
 % Instead of plotting the difference, plot the ratio of the levels, MzW and 
 % MzG. 
+plot(t, MzW ./ MzG)
+xlabel('Time (s)'); ylabel('ratio of White matter to Grey matter');
 % 
 % *   When is the ratio the biggest?
+% t = 0
 % *   Why would we measure at a time when the difference, rather than  ratio 
 % is biggest? 
 %% T2 contrast
@@ -401,7 +421,21 @@ fprintf('Net magnetization (180deg) %f\n',netMagnetization);
 % *Bonus:* What do you expect the net magnetization to be when the spins 
 % are randomly distributed over 2$<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>?</mi></math>$ 
 % radians?
-% 
+theta = rand(nSamples,1)*2*pi;
+spins = [cos(theta), sin(theta)];
+hist(theta)
+xlabel('Angle'), ylabel('Number of spins');
+set(gca,'xlim',[0 2*pi])
+
+plot(spins(:,1),spins(:,2),'o');
+grid on; axis equal
+set(gca,'xlim',[-2,2],'ylim',[-2 2])
+grid on; xlabel('x'), ylabel('y');
+
+averagePosition = sum(spins); 
+netMagnetization = sqrt(averagePosition(1)^2 + averagePosition(2)^2)/nSamples;
+fprintf('Net magnetization (180deg) %f\n',netMagnetization);
+
 % In a typical experiment, the phases become less coherent (i.e., spread 
 % more) over time, decreasing the net transverse magnetization.  The loss of signal 
 % from this *spin-dephasing* mechanism follows an exponential time constant.   
@@ -437,12 +471,13 @@ legend('Gray','White')
 plot(t,abs(MzG - MzW),'b-')
 xlabel('Time (s)'); ylabel('Transverse magnetization difference(T2)'); 
 grid on
+
 %% Question 7
 % # Suppose you wanted to measure brain structure, and you were particularly 
 % interested in gray/white differences.  Based on the T1 and T2 curves we have 
 % drawn, would you choose to distinguish these two tissues using T1 or T2? 
 % 
-% Comments
+% Comments: T1
 % 
 % # The T2 difference is so short that measurement of the T2 signal would be 
 % a problem were it not for the invention of an important measurement method called 
