@@ -1,0 +1,643 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML was auto-generated from MATLAB code.
+To make changes, update the MATLAB code and republish this document.
+      --><title>LINEAR SYSTEMS TUTORIAL</title><meta name="generator" content="MATLAB 9.0"><link rel="schema.DC" href="http://purl.org/dc/elements/1.1/"><meta name="DC.date" content="2019-02-10"><meta name="DC.source" content="mrTut03_LinearSystems.m"><style type="text/css">
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td{margin:0;padding:0;border:0;outline:0;font-size:100%;vertical-align:baseline;background:transparent}body{line-height:1}ol,ul{list-style:none}blockquote,q{quotes:none}blockquote:before,blockquote:after,q:before,q:after{content:'';content:none}:focus{outine:0}ins{text-decoration:none}del{text-decoration:line-through}table{border-collapse:collapse;border-spacing:0}
+
+html { min-height:100%; margin-bottom:1px; }
+html body { height:100%; margin:0px; font-family:Arial, Helvetica, sans-serif; font-size:10px; color:#000; line-height:140%; background:#fff none; overflow-y:scroll; }
+html body td { vertical-align:top; text-align:left; }
+
+h1 { padding:0px; margin:0px 0px 25px; font-family:Arial, Helvetica, sans-serif; font-size:1.5em; color:#d55000; line-height:100%; font-weight:normal; }
+h2 { padding:0px; margin:0px 0px 8px; font-family:Arial, Helvetica, sans-serif; font-size:1.2em; color:#000; font-weight:bold; line-height:140%; border-bottom:1px solid #d6d4d4; display:block; }
+h3 { padding:0px; margin:0px 0px 5px; font-family:Arial, Helvetica, sans-serif; font-size:1.1em; color:#000; font-weight:bold; line-height:140%; }
+
+a { color:#005fce; text-decoration:none; }
+a:hover { color:#005fce; text-decoration:underline; }
+a:visited { color:#004aa0; text-decoration:none; }
+
+p { padding:0px; margin:0px 0px 20px; }
+img { padding:0px; margin:0px 0px 20px; border:none; }
+p img, pre img, tt img, li img, h1 img, h2 img { margin-bottom:0px; } 
+
+ul { padding:0px; margin:0px 0px 20px 23px; list-style:square; }
+ul li { padding:0px; margin:0px 0px 7px 0px; }
+ul li ul { padding:5px 0px 0px; margin:0px 0px 7px 23px; }
+ul li ol li { list-style:decimal; }
+ol { padding:0px; margin:0px 0px 20px 0px; list-style:decimal; }
+ol li { padding:0px; margin:0px 0px 7px 23px; list-style-type:decimal; }
+ol li ol { padding:5px 0px 0px; margin:0px 0px 7px 0px; }
+ol li ol li { list-style-type:lower-alpha; }
+ol li ul { padding-top:7px; }
+ol li ul li { list-style:square; }
+
+.content { font-size:1.2em; line-height:140%; padding: 20px; }
+
+pre, code { font-size:12px; }
+tt { font-size: 1.2em; }
+pre { margin:0px 0px 20px; }
+pre.codeinput { padding:10px; border:1px solid #d3d3d3; background:#f7f7f7; }
+pre.codeoutput { padding:10px 11px; margin:0px 0px 20px; color:#4c4c4c; }
+pre.error { color:red; }
+
+@media print { pre.codeinput, pre.codeoutput { word-wrap:break-word; width:100%; } }
+
+span.keyword { color:#0000FF }
+span.comment { color:#228B22 }
+span.string { color:#A020F0 }
+span.untermstring { color:#B20000 }
+span.syscmd { color:#B28C00 }
+
+.footer { width:auto; padding:10px 0px; margin:25px 0px 0px; border-top:1px dotted #878787; font-size:0.8em; line-height:140%; font-style:italic; color:#878787; text-align:left; float:none; }
+.footer p { margin:0px; }
+.footer a { color:#878787; }
+.footer a:hover { color:#878787; text-decoration:underline; }
+.footer a:visited { color:#878787; }
+
+table th { padding:7px 5px; text-align:left; vertical-align:middle; border: 1px solid #d6d4d4; font-weight:bold; }
+table td { padding:7px 5px; text-align:left; vertical-align:top; border:1px solid #d6d4d4; }
+
+
+
+
+
+  </style></head><body><div class="content"><h1>LINEAR SYSTEMS TUTORIAL</h1><!--introduction--><div><ul><li>Class:     Psych 204B</li><li>Tutorial:  Linear Systems</li><li>Author:    Wandell</li><li>Date:       3.31.04</li><li>Duration:   30 minutes</li><li>Copyright:  Stanford University, Brian Wandell</li></ul></div><p>This tutorial has a lot of reading at the front</p><div><ul><li>Checked: 10/13/09 JW</li><li>Checked: 10/13/10 BW</li></ul></div><p>** The equations look right in the MLX form. **</p><p>This tutorial introduces the student to the basic methods of linear  systems theory, focusing on the tools of shift-invariant linear systems. The tutorial introduces the idea of superposition,  shift-invariance,  and impulse response functions. These ideas are fundamental to many methods and analyses used in functional neuroimaging and through  engineering and science.</p><p>Linear systems theory is a method of characterizing certain types of common systems.  A system is something that has an input and an output, and thus we can think of it as a function</p><p>output = L(input).</p><p>For example, the system might be an optical element, like a lens, that takes an image as an input and produces another image as an output. Or,  this system may be a biological system that we are measuring, for  instance the BOLD response that is the consequence of neural activity.</p><p>Characterizing the complete input-output properties of a system by exhaustive measurement is usually impossible. When a system qualifies as a linear system, it is possible to use the responses to a small set  of inputs to predict the response to any possible input. This can save  the scientist enormous amounts of work, and makes it possible to characterize the system completely.</p><p>Not all systems can be described using linear systems theory. To use linear methods to describe a system, it must satisfy the basic principle of superposition.</p><!--/introduction--><h2>Contents</h2><div><ul><li><a href="#1">The principle of superposition</a></li><li><a href="#2">The hemodynamic response function (HRF)</a></li><li><a href="#3">Impulses and shift-invariance</a></li><li><a href="#4">Characterizing SIL systems</a></li><li><a href="#5">Read and plot the SPM Hemodynamic response function (HRF)</a></li><li><a href="#7">Make a pair of stimuli</a></li><li><a href="#9">Plot the stimulus and output of a linear system with the SPM HRF</a></li><li><a href="#11">Event-related design</a></li><li><a href="#13">Block design experiments</a></li><li><a href="#14">Example 1: Two events that are spaced 4 seconds apart</a></li><li><a href="#16">Example 2: Two events that are spaced 2 seconds apart</a></li><li><a href="#18">Example 3: 3 events that are spaced 2s apart</a></li><li><a href="#20">Example 4: 5 stimuli given 2 seconds -&gt; block which is 10 seconds long</a></li><li><a href="#22">Thought Questions</a></li></ul></div><h2>The principle of superposition<a name="1"></a></h2><p>The principle of superposition in words is simply this:</p><p>If the response to input A is Ra, and the response to input B is Rb, then the response to the sum of A and B (A+B) is the sum of the  responses: Ra + Rb. In equation form this is</p><p>$$&lt;math xmlns="http://www.w3.org/1998/Math/MathML" display="block"&gt;&lt;mrow&gt;&lt;mtable
+columnalign="left"&gt;&lt;mtr&gt;&lt;mtd&gt;&lt;mrow&gt;&lt;mi mathvariant="normal"&gt;If&lt;/mi&gt;&lt;mtext&gt;?&lt;/mtext&gt;&lt;mtext&gt;?
+&lt;/mtext&gt;&lt;mtext&gt;?&lt;/mtext&gt;&lt;mtext&gt;?&lt;/mtext&gt;&lt;mtext&gt;?&lt;/mtext&gt;&lt;mtext&gt;?&lt;/mtext&gt;&lt;mi
+mathvariant="italic"&gt;L&lt;/mi&gt;&lt;mrow&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mrow&gt;&lt;mi mathvariant="italic"&gt;a&lt;/mi&gt;&lt;/mrow&gt;&lt;mo&gt;)&lt;/mo&gt;&lt;/mrow&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;msub&gt;&lt;mrow&gt;&lt;mi
+mathvariant="italic"&gt;R&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mi mathvariant="italic"&gt;a&lt;/mi&gt;&lt;/mrow&gt;&lt;/mtd&gt;&lt;/mtr&gt;&lt;mtr&gt;&lt;mtd&gt;&lt;mrow&gt;&lt;mi
+mathvariant="normal"&gt;and&lt;/mi&gt;&lt;mtext&gt;?&lt;/mtext&gt;&lt;mtext&gt;?&lt;/mtext&gt;&lt;mi mathvariant="italic"&gt;L&lt;/mi&gt;&lt;mrow&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mrow&gt;&lt;mi
+mathvariant="italic"&gt;b&lt;/mi&gt;&lt;/mrow&gt;&lt;mo&gt;)&lt;/mo&gt;&lt;/mrow&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;msub&gt;&lt;mrow&gt;&lt;mi
+mathvariant="italic"&gt;R&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mi mathvariant="italic"&gt;b&lt;/mi&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;/mrow&gt;&lt;/mtd&gt;&lt;/mtr&gt;&lt;mtr&gt;&lt;mtd&gt;&lt;mrow&gt;&lt;mi
+mathvariant="normal"&gt;then&lt;/mi&gt;&lt;mtext&gt;?&lt;/mtext&gt;&lt;mi mathvariant="italic"&gt;L&lt;/mi&gt;&lt;mrow&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mrow&gt;&lt;mi
+mathvariant="italic"&gt;a&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mi mathvariant="italic"&gt;b&lt;/mi&gt;&lt;/mrow&gt;&lt;mo&gt;)&lt;/mo&gt;&lt;/mrow&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;msub&gt;&lt;mrow&gt;&lt;mi
+mathvariant="italic"&gt;R&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mi mathvariant="italic"&gt;a&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;msub&gt;&lt;mrow&gt;&lt;mi
+mathvariant="italic"&gt;R&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mi mathvariant="italic"&gt;b&lt;/mi&gt;&lt;/mrow&gt;&lt;/mtd&gt;&lt;/mtr&gt;&lt;/mtable&gt;&lt;/mrow&gt;&lt;/math&gt;$$</p><pre class="error">Error updating Text.
+
+ String must have valid interpreter syntax: 
+$$&lt;math xmlns="http://www.w3.org/1998/Math/MathML" display="block"&gt;&lt;mrow&gt;&lt;mtable columnalign="left"&gt;&lt;mtr&gt;&lt;mtd&gt;&lt;mrow&gt;&lt;mi mathvariant="normal"&gt;If&lt;/mi&gt;&lt;mtext&gt;?&lt;/mtext&gt;&lt;mtext&gt;? &lt;/mtext&gt;&lt;mtext&gt;?&lt;/mtext&gt;&lt;mtext&gt;?&lt;/mtext&gt;&lt;mtext&gt;?&lt;/mtext&gt;&lt;mtext&gt;?&lt;/mtext&gt;&lt;mi mathvariant="italic"&gt;L&lt;/mi&gt;&lt;mrow&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mrow&gt;&lt;mi mathvariant="italic"&gt;a&lt;/mi&gt;&lt;/mrow&gt;&lt;mo&gt;)&lt;/mo&gt;&lt;/mrow&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;msub&gt;&lt;mrow&gt;&lt;mi mathvariant="italic"&gt;R&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mi mathvariant="italic"&gt;a&lt;/mi&gt;&lt;/mrow&gt;&lt;/mtd&gt;&lt;/mtr&gt;&lt;mtr&gt;&lt;mtd&gt;&lt;mrow&gt;&lt;mi mathvariant="normal"&gt;and&lt;/mi&gt;&lt;mtext&gt;?&lt;/mtext&gt;&lt;mtext&gt;?&lt;/mtext&gt;&lt;mi mathvariant="italic"&gt;L&lt;/mi&gt;&lt;mrow&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mrow&gt;&lt;mi mathvariant="italic"&gt;b&lt;/mi&gt;&lt;/mrow&gt;&lt;mo&gt;)&lt;/mo&gt;&lt;/mrow&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;msub&gt;&lt;mrow&gt;&lt;mi mathvariant="italic"&gt;R&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mi mathvariant="italic"&gt;b&lt;/mi&gt;&lt;mo&gt;,&lt;/mo&gt;&lt;/mrow&gt;&lt;/mtd&gt;&lt;/mtr&gt;&lt;mtr&gt;&lt;mtd&gt;&lt;mrow&gt;&lt;mi mathvariant="normal"&gt;then&lt;/mi&gt;&lt;mtext&gt;?&lt;/mtext&gt;&lt;mi mathvariant="italic"&gt;L&lt;/mi&gt;&lt;mrow&gt;&lt;mo&gt;(&lt;/mo&gt;&lt;mrow&gt;&lt;mi mathvariant="italic"&gt;a&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;mi mathvariant="italic"&gt;b&lt;/mi&gt;&lt;/mrow&gt;&lt;mo&gt;)&lt;/mo&gt;&lt;/mrow&gt;&lt;mo&gt;=&lt;/mo&gt;&lt;msub&gt;&lt;mrow&gt;&lt;mi mathvariant="italic"&gt;R&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow&gt;&lt;mn&gt;1&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mi mathvariant="italic"&gt;a&lt;/mi&gt;&lt;mo&gt;+&lt;/mo&gt;&lt;msub&gt;&lt;mrow&gt;&lt;mi mathvariant="italic"&gt;R&lt;/mi&gt;&lt;/mrow&gt;&lt;mrow&gt;&lt;mn&gt;2&lt;/mn&gt;&lt;/mrow&gt;&lt;/msub&gt;&lt;mi mathvariant="italic"&gt;b&lt;/mi&gt;&lt;/mrow&gt;&lt;/mtd&gt;&lt;/mtr&gt;&lt;/mtable&gt;&lt;/mrow&gt;&lt;/math&gt;$$
+</pre><p>There is one simple consequence of superposition that is often taken as a special case and named the principle of homogeneity.  Suppose that the inputs are equal, namely, a = b.  It is easy to see that</p><p><img src="mrTut03_LinearSystems_eq01135996112953295982.png" alt="$$<math xmlns=&#34;http://www.w3.org/1998/Math/MathML&#34; display=&#34;block&#34;&gt;<mrow&gt;<mi&#xA;mathvariant=&#34;italic&#34;&gt;L</mi&gt;<mrow&gt;<mo&gt;(</mo&gt;<mrow&gt;<mi mathvariant=&#34;italic&#34;&gt;a</mi&gt;<mo&gt;+</mo&gt;<mi&#xA;mathvariant=&#34;italic&#34;&gt;b</mi&gt;</mrow&gt;<mo&gt;)</mo&gt;</mrow&gt;<mo&gt;=</mo&gt;<mi mathvariant=&#34;italic&#34;&gt;L</mi&gt;<mrow&gt;<mo&gt;(</mo&gt;<mrow&gt;<mn&gt;2</mn&gt;<mi&#xA;mathvariant=&#34;italic&#34;&gt;a</mi&gt;</mrow&gt;<mo&gt;)</mo&gt;</mrow&gt;<mo&gt;=</mo&gt;<msub&gt;<mrow&gt;<mn&gt;2</mn&gt;<mi&#xA;mathvariant=&#34;italic&#34;&gt;R</mi&gt;</mrow&gt;<mrow&gt;<mn&gt;1</mn&gt;</mrow&gt;</msub&gt;<mi mathvariant=&#34;italic&#34;&gt;a</mi&gt;</mrow&gt;</math&gt;$$"></p><p>In general, if s is any scalar, a linear system will satisfy the rule:</p><p><img src="mrTut03_LinearSystems_eq08506540224764583535.png" alt="$$<math xmlns=&#34;http://www.w3.org/1998/Math/MathML&#34; display=&#34;block&#34;&gt;<mrow&gt;<mi&#xA;mathvariant=&#34;italic&#34;&gt;L</mi&gt;<mrow&gt;<mo&gt;(</mo&gt;<mrow&gt;<mi mathvariant=&#34;normal&#34;&gt;sa</mi&gt;</mrow&gt;<mo&gt;)</mo&gt;</mrow&gt;<mo&#xA;stretchy=&#34;false&#34;&gt;=</mo&gt;<msub&gt;<mrow&gt;<mi mathvariant=&#34;normal&#34;&gt;sR</mi&gt;</mrow&gt;<mrow&gt;<mn&gt;1</mn&gt;</mrow&gt;</msub&gt;<mi&#xA;mathvariant=&#34;italic&#34;&gt;a</mi&gt;</mrow&gt;</math&gt;$$"></p><p>An enormous number of simple systems satisfy superposition over a fairly large range of inputs.  Linear systems theory is a basic tool used throughout engineering, physics, and statistical modeling.</p><p>In this tutorial, we will build up some of the tools of linear systems theory.  These include the use of matrices to describe a linear system, the very important special case of a shift-invariant linear system, and the associated ideas of the impulse response function</p><p>All of these ideas are used in functional neuroimaging.  In fact, nearly every field that uses linear systems theory develops its own terminology (jargon) to describe the general ideas of linear systems theory in the  specific context of that field.</p><h2>The hemodynamic response function (HRF)<a name="2"></a></h2><p>In neuroimaging, the hemodynamic response function (HRF) is the impulse response function. The analysis of the modulations in block-design experiments are closely connected to the system transfer function.</p><h2>Impulses and shift-invariance<a name="3"></a></h2><p>All time varying stimuli can be thought of as a series of impulses at different levels. We can approximate any complex stimulus as if it were simply the sum of a number of shifted and scaled impulses.</p><p>A shift-invariant linear system is a special case when the system responds in the same way to every impulse, no matter when the impulse occurs in time. That is, it doesn't matter what happened just before the impulse or what happens just after the impulse.  The response to the impulse will be the same.</p><p>The only difference in the response to different impulses is that the responses are shifted in time to correspond to the impulse and multiplied by a scalar that equals the size of the impulse.</p><p>The significance of the principle of superposition is this:</p><p>If we know the impulse response function, we can predict the response to any stimulus (combinations of impulses).  We compute the response to each impulse and then add up all the results.</p><h2>Characterizing SIL systems<a name="4"></a></h2><p>Practically, to characterize shift-invariant linear systems, then we need to measure only one thing: the way the system responds to an impulse of a particular intensity. This response is called the impulse response function of the system.</p><p>The analysis of BOLD data presupposes that the responses are shift-invariant linear systems.  In this field, the impulse response function is called the hemodynamic response function, or HRF.</p><p>In neuroimaging, the principles of  superposition and shift invariance are essential to the ideas used in rapid event-related designs: The underlying assumption is that if you have two neural (or cognitive) events A and B occurring one after the other, then the BOLD response of A and the BOLD response of B will be identical (but B will be shifted in time with respect to A) and thus total BOLD signal after these two events is a sum of two independent responses shifted in time:</p><pre class="language-matlab">BOLD (A+B)=BOLD(A) + BOLD(B).
+</pre><p>Now, we do some simple calculations</p><h2>Read and plot the SPM Hemodynamic response function (HRF)<a name="5"></a></h2><pre class="codeinput">RT = 1;         <span class="comment">% Repetition time - sample every second</span>
+[hrf,p] = spm_hrf(RT);
+
+nT = p(7);   <span class="comment">%Number of time steps</span>
+t  = 0:nT;   <span class="comment">%Individual time samples of the HRF</span>
+
+figure(1), clf
+plot(t,hrf)
+xlabel(<span class="string">'Time (sec)'</span>)
+ylabel(<span class="string">'HRF level'</span>)
+grid <span class="string">on</span>
+
+<span class="comment">% Notice that the hrf values sum to 1.</span>
+<span class="comment">%</span>
+<span class="comment">% This means that convolution with the HRF will preserve the mean of the</span>
+<span class="comment">% input stimulus level.</span>
+sum(hrf)
+
+<span class="comment">% Also, notice that the default SPM HRF has a post-stimulus undershoot</span>
+</pre><pre class="codeoutput error">Undefined function 'spm_hrf' for input arguments of type 'double'.
+
+Error in mrTut03_LinearSystems (line 137)
+[hrf,p] = spm_hrf(RT); 
+</pre><h2>Make a pair of stimuli<a name="7"></a></h2><p>1st event at time 1</p><pre class="codeinput">time1=1; stim1=zeros(1,nT); stim1(time1)=1;
+
+<span class="comment">% 2nd event at time 2</span>
+time2=8; stim2=zeros(1,nT); stim2(time2)=1;
+</pre><h2>Plot the stimulus and output of a linear system with the SPM HRF<a name="9"></a></h2><pre class="codeinput">figure(1), clf
+subplot(2,2,1); plot((1:nT),zeros(1,nT)); hold;
+plot([ time1 time1 time1], [0 .5 1]); hold
+axis([0 30 -0.5 1.5])
+title(<span class="string">'Stimulus 1'</span>)
+
+bold1=conv(stim1,hrf);
+subplot(2,2,2); plot(t(1:nT),bold1(1:nT))
+axis([0 30 -0.5 .8]);
+title(<span class="string">'Stimulus 1 BOLD response'</span>)
+
+<span class="comment">% second stimulus and output</span>
+subplot(2,2,3);  plot((1:nT),zeros(1,nT)); hold;
+plot([ time2 time2 time2], [0 .5 1]); hold
+axis([0 30 -0.5 1.5])
+title(<span class="string">'Stimulus 2 - shifted in time'</span>)
+xlabel(<span class="string">'time[s]'</span>)
+
+bold2=conv(stim2,hrf);
+subplot(2,2,4); plot(t(1:nT),bold2(1:nT));
+axis([0 30 -0.5 .8]);
+set(gcf, <span class="string">'color'</span>, [ 1 1 1])
+title(<span class="string">'Stimulus 2 BOLD response'</span>);
+xlabel(<span class="string">'time[s]'</span>)
+</pre><h2>Event-related design<a name="11"></a></h2><p>Suppose a subject sees stimulus 1 and then and then later stimulus 2. The total stimulation is therefore:</p><pre class="codeinput">stim3 = stim1 + stim2;
+
+<span class="comment">% According to the principle of superposition the output should be the sum</span>
+<span class="comment">% of the individual events. Thus, the output can be  written as the sum of</span>
+<span class="comment">% the outputs of stimuli 1 and 2</span>
+<span class="comment">%</span>
+figure(3)
+subplot(2,2,1); plot((1:nT),zeros(1,nT)); hold;
+plot([ time1 time1 time1], [0 .5 1]);
+plot([ time2 time2 time2], [0 .5 1]);
+axis([0 30 -0.5 1.5]);
+hold
+title(<span class="string">'Stimulus 1 + Stimulus 2'</span>)
+
+<span class="comment">% Calculating the output using the superposition principle</span>
+BOLD3 = bold1(1:nT) + bold2(1:nT);
+
+subplot(2,2,2); plot(t(1:nT),BOLD3);
+axis([0 30 -0.5 .8]);
+xlabel (<span class="string">'time [s]'</span>)
+ylabel(<span class="string">'% signal change'</span>)
+title(<span class="string">'Output - according to the superposition principle'</span>)
+set(gcf,<span class="string">'color'</span>,[ 1 1 1])
+
+<span class="comment">% Convolution is a mathematical function that applies the</span>
+<span class="comment">% superposition principle:</span>
+<span class="comment">% basically it sums over all impulse responses shifted in time</span>
+<span class="comment">%</span>
+<span class="comment">% output=sum(hrf*input(t))</span>
+<span class="comment">%</span>
+<span class="comment">%</span>
+subplot(2,2,3); plot((1:nT),zeros(1,nT)); hold;
+title(<span class="string">'Stimulus 3'</span>)
+xlabel (<span class="string">'time [s]'</span>)
+plot([ time1 time1 time1], [0 .5 1]);
+plot([ time2 time2 time2], [0 .5 1]);
+axis([0 30 -0.5 1.5]);
+hold
+
+<span class="comment">% We can use the matlab conv function to calculate the</span>
+<span class="comment">% output using the convolution operator:</span>
+<span class="comment">% for the rest of the tutorial, we will use the conv command</span>
+<span class="comment">%</span>
+bold3=conv(stim3,hrf);
+
+subplot(2,2,4); plot(t(1:nT),bold3(1:nT))
+axis([0 30 -0.5 .8])
+xlabel (<span class="string">'time [s]'</span>)
+ylabel(<span class="string">'% signal change'</span>)
+title(<span class="string">'Convolution of the hrf with stimulus 3'</span>)
+</pre><h2>Block design experiments<a name="13"></a></h2><p>We will start with blocks of 2 events and then continue to longer blocks. We will examine how the number of events and the spacing between events affects the predicted bold signal.</p><h2>Example 1: Two events that are spaced 4 seconds apart<a name="14"></a></h2><pre class="codeinput">figure(4), clf
+
+<span class="comment">% 1st event at time 1</span>
+time1 = 1; stim1=zeros(1,nT); stim1(time1)=1;
+
+<span class="comment">% 1st event at time2</span>
+time2 = 5; stim2=zeros(1,nT); stim2(time2)=1;
+
+stim4 = stim1 + stim2;
+
+<span class="comment">% stimulus</span>
+subplot(4,2,1); plot((1:22),zeros(1,22)); hold;
+plot([ time1 time1 time1], [0 .5 1]);
+plot([ time2 time2 time2], [0 .5 1]);
+axis([0 30 -0.5 1.5]);
+hold
+title(<span class="string">'Stimulus'</span>)
+
+<span class="comment">% BOLD</span>
+bold1=conv(stim4,hrf);
+subplot(4,2,2); plot(t(1:nT),bold1(1:nT));axis([0 30 -0.5 .8])
+axis([0 30 -0.5 0.8]);
+ylabel(<span class="string">'% signal change'</span>)
+title(<span class="string">' BOLD response'</span>)
+</pre><h2>Example 2: Two events that are spaced 2 seconds apart<a name="16"></a></h2><p>Note that here you get one peak and not 2 peaks Why?</p><pre class="codeinput">time1=1;
+time2=3;
+
+stim1=zeros(1,nT);
+stim1(time1)=1;    <span class="comment">% 1st event at time 1</span>
+stim2=zeros(1,nT);
+stim2(time2)=1;     <span class="comment">% 2nd event at time 2</span>
+
+stim5=stim1+stim2;
+
+subplot(4,2,3); plot((1:nT),zeros(1,nT)); hold;
+plot([ time1 time1 time1], [0 .5 1]);
+plot([ time2 time2 time2], [0 .5 1]); hold
+axis([0 30 -0.5 1.5]);
+
+bold1 = conv(stim5,hrf);
+subplot(4,2,4); plot(t(1:nT),bold1(1:nT));axis([0 30 -0.5 .8])
+ylabel(<span class="string">'% signal change'</span>)
+</pre><h2>Example 3: 3 events that are spaced 2s apart<a name="18"></a></h2><pre class="codeinput">time1=1;time2=3;time3=5;
+stim1=zeros(1,nT); stim2=zeros(1,nT); stim3=zeros(1,nT);
+stim1(time1)=1; <span class="comment">% 1st event at time 1</span>
+stim2(time2)=1; <span class="comment">% 2nd event at time 2</span>
+stim3(time3)=1;  <span class="comment">% 3rd event at time 3</span>
+
+stim=stim1+stim2+stim3;
+
+subplot(4,2,5);
+plot((1:nT),zeros(1,nT)); hold;
+plot([ time1 time1 time1], [0 .5 1]);
+plot([ time2 time2 time2], [0 .5 1]);
+plot([ time3 time3 time3], [0 .5 1]);
+axis([0 30 -0.5 1.5]);
+
+bold1 = conv(stim,hrf);
+subplot(4,2,6);
+plot(t(1:nT),bold1(1:nT));
+axis([0 30 -0.5 0.8]);
+xlabel(<span class="string">'time [s]'</span>);
+ylabel(<span class="string">'percent signal change'</span>);
+set(gcf,<span class="string">'Color'</span>,[1 1 1]);
+</pre><h2>Example 4: 5 stimuli given 2 seconds -&gt; block which is 10 seconds long<a name="20"></a></h2><pre>What changed as you increased the number of stimuli?
+Why?</pre><pre class="codeinput">time1=1;time2=3;time3=5;time4=7;time5=9;
+time_stim = 1:2:9;
+stim = zeros(1,nT);
+stim(time_stim)=ones(size(time_stim));
+
+subplot(4,2,7); plot((1:nT),zeros(1,nT)); hold;
+plot([ time1 time1 time1], [0 .5 1]);
+plot([ time2 time2 time2], [0 .5 1]);
+plot([ time3 time3 time3], [0 .5 1]);
+plot([ time4 time4 time4], [0 .5 1]);
+plot([ time5 time5 time5], [0 .5 1]);
+axis([0 30 -0.5 1.5]);
+hold
+xlabel (<span class="string">'time [s]'</span>)
+
+
+bold1 = conv(stim,hrf);
+subplot(4,2,8); plot(t(1:nT),bold1(1:nT));axis([0 30 -0.5 .8])
+xlabel (<span class="string">'time [s]'</span>)
+ylabel(<span class="string">'% signal change'</span>)
+set(gcf,<span class="string">'color'</span>,[ 1 1 1])
+</pre><h2>Thought Questions<a name="22"></a></h2><p>* QUESTION 1 * Researchers presented a subject with an image of a face and measured the hemodynamic response to this image. Then they showed the same stimulus again and found that the response peaked at the same time, but the amplitude of response was half the amplitude of the first presentation. Is the response for the second presentation expected from a linear system? Explain.</p><p>* QUESTION 2 * Researchers presented stimuli in 2 blocks. In the first block they presented flashing checkboards at a rate of 1Hz for 10 seconds. In the second block they presented flashing checkerboards at a rate of 1hz for 20 seconds. How will the amplitude and/or duration of the block-response change between conditions? Explain.</p><p>* QUESTION 3 * Researchers presented stimuli in 2 conditions. In the first condition they presented a tone for 1 second, waited for 8 seconds, and presented a second tone for 1 second. In the second condition, they presented a tone for 1 second, waited 1 second, and presented a second tone for 1 second. How will the response differ in amplitude and/or duration between the two conditions? A plot/graph will be useful in explaining the answer.</p><pre class="codeinput"><span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+
+<span class="keyword">return</span>
+</pre><p class="footer"><br><a href="http://www.mathworks.com/products/matlab/">Published with MATLAB&reg; R2016a</a><br></p></div><!--
+##### SOURCE BEGIN #####
+%% LINEAR SYSTEMS TUTORIAL
+% * Class:     Psych 204B
+% * Tutorial:  Linear Systems
+% * Author:    Wandell
+% * Date:       3.31.04
+% * Duration:   30 minutes
+% * Copyright:  Stanford University, Brian Wandell
+% 
+% This tutorial has a lot of reading at the front
+% 
+% * Checked: 10/13/09 JW
+% * Checked: 10/13/10 BW
+% 
+% **** The equations look right in the MLX form. ****
+% 
+% This tutorial introduces the student to the basic methods of linear  systems 
+% theory, focusing on the tools of shift-invariant linear systems. The tutorial 
+% introduces the idea of superposition,  shift-invariance,  and impulse response 
+% functions. These ideas are fundamental to many methods and analyses used in 
+% functional neuroimaging and through  engineering and science.
+% 
+% Linear systems theory is a method of characterizing certain types of common 
+% systems.  A system is something that has an input and an output, and thus we 
+% can think of it as a function 
+% 
+% output = L(input).
+% 
+% For example, the system might be an optical element, like a lens, that  
+% takes an image as an input and produces another image as an output. Or,  this 
+% system may be a biological system that we are measuring, for  instance the BOLD 
+% response that is the consequence of neural activity.
+% 
+% Characterizing the complete input-output properties of a system by exhaustive  
+% measurement is usually impossible. When a system qualifies as a linear system, 
+% it is possible to use the responses to a small set  of inputs to predict the 
+% response to any possible input. This can save  the scientist enormous amounts 
+% of work, and makes it possible to characterize the system completely.
+% 
+% Not all systems can be described using linear systems theory. To use linear 
+% methods to describe a system, it must satisfy the basic principle of superposition.
+%% The principle of superposition
+% The principle of superposition in words is simply this:
+% 
+% If the response to input A is Ra, and the response to input B is Rb, then 
+% the response to the sum of A and B (A+B) is the sum of the  responses: Ra + 
+% Rb. In equation form this is
+% 
+% $$<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mtable 
+% columnalign="left"><mtr><mtd><mrow><mi mathvariant="normal">If</mi><mtext>?</mtext><mtext>?
+% </mtext><mtext>?</mtext><mtext>?</mtext><mtext>?</mtext><mtext>?</mtext><mi 
+% mathvariant="italic">L</mi><mrow><mo>(</mo><mrow><mi mathvariant="italic">a</mi></mrow><mo>)</mo></mrow><mo>=</mo><msub><mrow><mi 
+% mathvariant="italic">R</mi></mrow><mrow><mn>1</mn></mrow></msub><mi mathvariant="italic">a</mi></mrow></mtd></mtr><mtr><mtd><mrow><mi 
+% mathvariant="normal">and</mi><mtext>?</mtext><mtext>?</mtext><mi mathvariant="italic">L</mi><mrow><mo>(</mo><mrow><mi 
+% mathvariant="italic">b</mi></mrow><mo>)</mo></mrow><mo>=</mo><msub><mrow><mi 
+% mathvariant="italic">R</mi></mrow><mrow><mn>2</mn></mrow></msub><mi mathvariant="italic">b</mi><mo>,</mo></mrow></mtd></mtr><mtr><mtd><mrow><mi 
+% mathvariant="normal">then</mi><mtext>?</mtext><mi mathvariant="italic">L</mi><mrow><mo>(</mo><mrow><mi 
+% mathvariant="italic">a</mi><mo>+</mo><mi mathvariant="italic">b</mi></mrow><mo>)</mo></mrow><mo>=</mo><msub><mrow><mi 
+% mathvariant="italic">R</mi></mrow><mrow><mn>1</mn></mrow></msub><mi mathvariant="italic">a</mi><mo>+</mo><msub><mrow><mi 
+% mathvariant="italic">R</mi></mrow><mrow><mn>2</mn></mrow></msub><mi mathvariant="italic">b</mi></mrow></mtd></mtr></mtable></mrow></math>$$
+% 
+% There is one simple consequence of superposition that is often taken as  
+% a special case and named the principle of homogeneity.  Suppose that the inputs 
+% are equal, namely, a = b.  It is easy to see that 
+% 
+% $$<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi 
+% mathvariant="italic">L</mi><mrow><mo>(</mo><mrow><mi mathvariant="italic">a</mi><mo>+</mo><mi 
+% mathvariant="italic">b</mi></mrow><mo>)</mo></mrow><mo>=</mo><mi mathvariant="italic">L</mi><mrow><mo>(</mo><mrow><mn>2</mn><mi 
+% mathvariant="italic">a</mi></mrow><mo>)</mo></mrow><mo>=</mo><msub><mrow><mn>2</mn><mi 
+% mathvariant="italic">R</mi></mrow><mrow><mn>1</mn></mrow></msub><mi mathvariant="italic">a</mi></mrow></math>$$
+% 
+% In general, if s is any scalar, a linear system will satisfy the rule:
+% 
+% $$<math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><mrow><mi 
+% mathvariant="italic">L</mi><mrow><mo>(</mo><mrow><mi mathvariant="normal">sa</mi></mrow><mo>)</mo></mrow><mo 
+% stretchy="false">=</mo><msub><mrow><mi mathvariant="normal">sR</mi></mrow><mrow><mn>1</mn></mrow></msub><mi 
+% mathvariant="italic">a</mi></mrow></math>$$
+% 
+% An enormous number of simple systems satisfy superposition over a fairly  
+% large range of inputs.  Linear systems theory is a basic tool used throughout 
+% engineering, physics, and statistical modeling.   
+% 
+% In this tutorial, we will build up some of the tools of linear systems 
+% theory.  These include the use of matrices to describe a linear system, the 
+% very important special case of a shift-invariant linear system, and the associated 
+% ideas of the impulse response function
+% 
+% All of these ideas are used in functional neuroimaging.  In fact, nearly 
+% every field that uses linear systems theory develops its own terminology (jargon) 
+% to describe the general ideas of linear systems theory in the  specific context 
+% of that field.   
+%% The hemodynamic response function (HRF) 
+% In neuroimaging, the hemodynamic response function (HRF) is the impulse response 
+% function. The analysis of the modulations in block-design experiments are closely 
+% connected to the system transfer function.
+%% Impulses and shift-invariance
+% All time varying stimuli can be thought of as a series of impulses at different 
+% levels. We can approximate any complex stimulus as if it were simply the sum 
+% of a number of shifted and scaled impulses. 
+% 
+% A shift-invariant linear system is a special case when the system responds 
+% in the same way to every impulse, no matter when the impulse occurs in time.  
+% That is, it doesn't matter what happened just before the impulse or what happens 
+% just after the impulse.  The response to the impulse will be the same.
+% 
+% The only difference in the response to different impulses is that the responses 
+% are shifted in time to correspond to the impulse and multiplied by a scalar 
+% that equals the size of the impulse.  
+% 
+% The significance of the principle of superposition is this:
+% 
+% If we know the impulse response function, we can predict the response to 
+% any stimulus (combinations of impulses).  We compute the response to each impulse 
+% and then add up all the results.
+%% Characterizing SIL systems
+% Practically, to characterize shift-invariant linear systems, then we need 
+% to measure only one thing: the way the system responds to an impulse of a particular 
+% intensity. This response is called the impulse response function of the system. 
+% 
+% The analysis of BOLD data presupposes that the responses are shift-invariant 
+% linear systems.  In this field, the impulse response function is called the 
+% hemodynamic response function, or HRF.
+% 
+% In neuroimaging, the principles of  superposition and shift invariance 
+% are essential to the ideas used in rapid event-related designs: The underlying 
+% assumption is that if you have two neural (or cognitive) events A and B occurring 
+% one after the other, then the BOLD response of A and the BOLD response of B  
+% will be identical (but B will be shifted in time with respect to A) and thus 
+% total BOLD signal after these two events is a sum of two independent responses 
+% shifted in time:
+% 
+%   BOLD (A+B)=BOLD(A) + BOLD(B).
+% 
+% Now, we do some simple calculations
+%% Read and plot the SPM Hemodynamic response function (HRF)
+%%
+RT = 1;         % Repetition time - sample every second
+[hrf,p] = spm_hrf(RT); 
+
+nT = p(7);   %Number of time steps
+t  = 0:nT;   %Individual time samples of the HRF
+
+figure(1), clf
+plot(t,hrf)
+xlabel('Time (sec)')
+ylabel('HRF level')
+grid on
+
+% Notice that the hrf values sum to 1.
+%
+% This means that convolution with the HRF will preserve the mean of the
+% input stimulus level.
+sum(hrf)
+
+% Also, notice that the default SPM HRF has a post-stimulus undershoot
+%% Make a pair of stimuli
+% 1st event at time 1
+%%
+time1=1; stim1=zeros(1,nT); stim1(time1)=1;
+
+% 2nd event at time 2
+time2=8; stim2=zeros(1,nT); stim2(time2)=1;
+%% Plot the stimulus and output of a linear system with the SPM HRF
+%%
+figure(1), clf
+subplot(2,2,1); plot((1:nT),zeros(1,nT)); hold; 
+plot([ time1 time1 time1], [0 .5 1]); hold
+axis([0 30 -0.5 1.5])
+title('Stimulus 1')
+
+bold1=conv(stim1,hrf);
+subplot(2,2,2); plot(t(1:nT),bold1(1:nT))
+axis([0 30 -0.5 .8]);
+title('Stimulus 1 BOLD response')
+
+% second stimulus and output
+subplot(2,2,3);  plot((1:nT),zeros(1,nT)); hold;
+plot([ time2 time2 time2], [0 .5 1]); hold
+axis([0 30 -0.5 1.5])
+title('Stimulus 2 - shifted in time')
+xlabel('time[s]')
+
+bold2=conv(stim2,hrf);
+subplot(2,2,4); plot(t(1:nT),bold2(1:nT));   
+axis([0 30 -0.5 .8]);
+set(gcf, 'color', [ 1 1 1])
+title('Stimulus 2 BOLD response');
+xlabel('time[s]')
+%% Event-related design
+%%
+% Suppose a subject sees stimulus 1 and then and then later stimulus 2. The
+% total stimulation is therefore:
+stim3 = stim1 + stim2;
+
+% According to the principle of superposition the output should be the sum
+% of the individual events. Thus, the output can be  written as the sum of
+% the outputs of stimuli 1 and 2
+%
+figure(3)
+subplot(2,2,1); plot((1:nT),zeros(1,nT)); hold; 
+plot([ time1 time1 time1], [0 .5 1]);
+plot([ time2 time2 time2], [0 .5 1]); 
+axis([0 30 -0.5 1.5]);
+hold
+title('Stimulus 1 + Stimulus 2')
+
+% Calculating the output using the superposition principle
+BOLD3 = bold1(1:nT) + bold2(1:nT);
+
+subplot(2,2,2); plot(t(1:nT),BOLD3);
+axis([0 30 -0.5 .8]);
+xlabel ('time [s]')
+ylabel('% signal change')
+title('Output - according to the superposition principle')
+set(gcf,'color',[ 1 1 1])
+
+% Convolution is a mathematical function that applies the
+% superposition principle:
+% basically it sums over all impulse responses shifted in time
+%
+% output=sum(hrf*input(t))
+%
+%
+subplot(2,2,3); plot((1:nT),zeros(1,nT)); hold; 
+title('Stimulus 3')
+xlabel ('time [s]')
+plot([ time1 time1 time1], [0 .5 1]); 
+plot([ time2 time2 time2], [0 .5 1]); 
+axis([0 30 -0.5 1.5]);
+hold
+
+% We can use the matlab conv function to calculate the 
+% output using the convolution operator:
+% for the rest of the tutorial, we will use the conv command
+%
+bold3=conv(stim3,hrf);
+
+subplot(2,2,4); plot(t(1:nT),bold3(1:nT))
+axis([0 30 -0.5 .8])
+xlabel ('time [s]')
+ylabel('% signal change')
+title('Convolution of the hrf with stimulus 3')
+%% Block design experiments
+% We will start with blocks of 2 events and then continue to longer blocks. 
+% We will examine how the number of events and the spacing between events affects 
+% the predicted bold signal.
+%% Example 1: Two events that are spaced 4 seconds apart
+%%
+figure(4), clf
+
+% 1st event at time 1
+time1 = 1; stim1=zeros(1,nT); stim1(time1)=1;
+
+% 1st event at time2
+time2 = 5; stim2=zeros(1,nT); stim2(time2)=1;
+
+stim4 = stim1 + stim2;
+
+% stimulus
+subplot(4,2,1); plot((1:22),zeros(1,22)); hold; 
+plot([ time1 time1 time1], [0 .5 1]); 
+plot([ time2 time2 time2], [0 .5 1]); 
+axis([0 30 -0.5 1.5]);
+hold
+title('Stimulus')
+
+% BOLD
+bold1=conv(stim4,hrf);
+subplot(4,2,2); plot(t(1:nT),bold1(1:nT));axis([0 30 -0.5 .8])
+axis([0 30 -0.5 0.8]);
+ylabel('% signal change')
+title(' BOLD response')
+%% Example 2: Two events that are spaced 2 seconds apart
+% Note that here you get one peak and not 2 peaks Why? 
+%%
+time1=1;
+time2=3;
+
+stim1=zeros(1,nT);
+stim1(time1)=1;    % 1st event at time 1
+stim2=zeros(1,nT);
+stim2(time2)=1;     % 2nd event at time 2
+
+stim5=stim1+stim2;
+
+subplot(4,2,3); plot((1:nT),zeros(1,nT)); hold; 
+plot([ time1 time1 time1], [0 .5 1]); 
+plot([ time2 time2 time2], [0 .5 1]); hold
+axis([0 30 -0.5 1.5]);
+
+bold1 = conv(stim5,hrf);
+subplot(4,2,4); plot(t(1:nT),bold1(1:nT));axis([0 30 -0.5 .8])
+ylabel('% signal change')
+%% Example 3: 3 events that are spaced 2s apart
+%%
+time1=1;time2=3;time3=5;
+stim1=zeros(1,nT); stim2=zeros(1,nT); stim3=zeros(1,nT); 
+stim1(time1)=1; % 1st event at time 1
+stim2(time2)=1; % 2nd event at time 2
+stim3(time3)=1;  % 3rd event at time 3
+
+stim=stim1+stim2+stim3;
+
+subplot(4,2,5); 
+plot((1:nT),zeros(1,nT)); hold; 
+plot([ time1 time1 time1], [0 .5 1]); 
+plot([ time2 time2 time2], [0 .5 1]); 
+plot([ time3 time3 time3], [0 .5 1]); 
+axis([0 30 -0.5 1.5]);
+
+bold1 = conv(stim,hrf);
+subplot(4,2,6);
+plot(t(1:nT),bold1(1:nT));
+axis([0 30 -0.5 0.8]);
+xlabel('time [s]');
+ylabel('percent signal change');
+set(gcf,'Color',[1 1 1]);
+%% Example 4: 5 stimuli given 2 seconds -> block which is 10 seconds long
+%%
+%  What changed as you increased the number of stimuli?
+%  Why?
+
+time1=1;time2=3;time3=5;time4=7;time5=9;
+time_stim = 1:2:9;
+stim = zeros(1,nT);
+stim(time_stim)=ones(size(time_stim));
+
+subplot(4,2,7); plot((1:nT),zeros(1,nT)); hold; 
+plot([ time1 time1 time1], [0 .5 1]); 
+plot([ time2 time2 time2], [0 .5 1]); 
+plot([ time3 time3 time3], [0 .5 1]); 
+plot([ time4 time4 time4], [0 .5 1]); 
+plot([ time5 time5 time5], [0 .5 1]); 
+axis([0 30 -0.5 1.5]);
+hold
+xlabel ('time [s]')
+
+
+bold1 = conv(stim,hrf);
+subplot(4,2,8); plot(t(1:nT),bold1(1:nT));axis([0 30 -0.5 .8])
+xlabel ('time [s]')
+ylabel('% signal change')
+set(gcf,'color',[ 1 1 1])
+%% Thought Questions
+% *** QUESTION 1 *** Researchers presented a subject with an image of a face 
+% and measured the hemodynamic response to this image. Then they showed the same 
+% stimulus again and found that the response peaked at the same time, but the 
+% amplitude of response was half the amplitude of the first presentation. Is the 
+% response for the second presentation expected from a linear system? Explain. 
+% 
+% *** QUESTION 2 *** Researchers presented stimuli in 2 blocks. In the first 
+% block they presented flashing checkboards at a rate of 1Hz for 10 seconds. In 
+% the second block they presented flashing checkerboards at a rate of 1hz for 
+% 20 seconds. How will the amplitude and/or duration of the block-response change 
+% between conditions? Explain.
+% 
+% *** QUESTION 3 *** Researchers presented stimuli in 2 conditions. In the 
+% first condition they presented a tone for 1 second, waited for 8 seconds, and 
+% presented a second tone for 1 second. In the second condition, they presented 
+% a tone for 1 second, waited 1 second, and presented a second tone for 1 second. 
+% How will the response differ in amplitude and/or duration between the two conditions? 
+% A plot/graph will be useful in explaining the answer.
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+return
+##### SOURCE END #####
+--></body></html>
